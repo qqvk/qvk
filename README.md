@@ -1,2 +1,12 @@
-# qvk
-A quick Web integration development environment.
+# 什么是qvk
+
+qvk是一个快速Web集成开发环境，集成了ThinkJS、Vue.js和Webpack，旨在为前端项目的创建、开发、打包、测试、部署提供全流程的支持。
+
+# 特性
+
+- 集成Webpack常用配置
+- 集成前端开发最佳实践
+- 前后端分离，快速搭建
+
+# 计划
+
