@@ -11,6 +11,27 @@ qvk初始版集成以下Web框架和打包工具。
 
 ## 用法 
 
+### 1. 克隆代码
+
+```
+git clone git@github.com:qqvk/qvk.git [PROJECT]
+```
+
+把`[PROJECT]`替换成你的项目名。
+
+### 2. 安装依赖
+
+**打开两个终端窗口**，分别进入server和client目录，分别运行`npm install`安装依赖。
+
+### 3. 构建模板
+
+进入client目录，运行`npm run build`构建模板和静态文件。
+
+### 4. 启动服务
+
+启动命令：`npm start`
+
+启动顺序：先启动服务端，再启动前端。就是先在server目录中运行`npm start`，再在client目录中运行`npm start`。
 
 ## 计划
 
