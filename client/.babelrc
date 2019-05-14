@@ -1,0 +1,17 @@
+{
+  "presets": [
+    "es2015",
+    "stage-0"
+  ],
+  "ignore": "node_modules",
+  "only": "src",
+  "plugins": [
+    ["transform-runtime"],
+    "add-filehash",
+    ["transform-imports", {
+        "vuetify": {
+            "transform": "vuetify/src/components/${member}"
+        }
+    }]
+  ]
+}

@@ -1,0 +1,7 @@
+.vscode
+client/node_modules
+client/assit/cache
+server/node_modules
+server/view
+server/www
+server/runtime

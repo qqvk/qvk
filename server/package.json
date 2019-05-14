@@ -1,0 +1,46 @@
+{
+  "name": "your_project_backedn",
+  "description": "A Web integrated development environment.",
+  "version": "0.0.1",
+  "scripts": {
+    "start": "node development.js",
+    "compile": "babel --no-babelrc src/ --presets think-node --out-dir app/",
+    "lint": "eslint src/",
+    "lint-fix": "eslint --fix src/"
+  },
+  "dependencies": {
+    "debug": "^3.1.0",
+    "mkdirp": "^0.5.1",
+    "mv": "^2.1.1",
+    "think-cache": "^1.0.0",
+    "think-cache-file": "^1.0.8",
+    "think-cache-redis": "^1.1.2",
+    "think-gc": "^1.0.2",
+    "think-logger3": "^1.0.0",
+    "think-model": "^1.0.0",
+    "think-model-mysql": "^1.0.6",
+    "think-mongo": "^1.0.8",
+    "think-session": "^1.0.0",
+    "think-session-file": "^1.0.5",
+    "think-session-mysql": "^1.0.7",
+    "think-view": "^1.0.0",
+    "think-view-nunjucks": "^1.0.1",
+    "thinkjs": "^3.0.0",
+    "xss": "^0.3.4"
+  },
+  "devDependencies": {
+    "think-watcher": "^3.0.3",
+    "webpack-dev-middleware": "^3.1.2",
+    "xlsx": "^0.14.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:cncuckoo/backbay.git"
+  },
+  "license": "MIT",
+  "engines": {
+    "node": ">=8.9.0"
+  },
+  "main": "development.js",
+  "author": "lisongfeng/cncuckoo"
+}

@@ -1,0 +1,1 @@
+import './_static/css/index_index.scss'
