@@ -11,7 +11,6 @@ module.exports = merge(common, {
     },
     watchContentBase: true,
     port: 9090,
-    host: 'localhost',
-    // allowedHosts: ['dev.backbay']
+    host: 'localhost'
   }
 });

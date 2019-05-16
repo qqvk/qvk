@@ -21,11 +21,11 @@ module.exports = merge(common, {
         dry: false
       }
     ), // 删除重新生成
-    // new UglifyJSPlugin({
-    //   compress: {
-    //     warnings: false
-    //   }
-    // }), // 禁止Webpack本地压缩JS——通过CDN线上压缩，效率更高
+    new UglifyJSPlugin({
+      compress: {
+        warnings: false
+      }
+    }), // 如果有CDN压缩，可禁止Webpack本地压缩JS
     new HashedModuleIdsPlugin(), // keep bundle hash no change
   ]
 })

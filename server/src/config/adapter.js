@@ -122,39 +122,6 @@ exports.view = {
         const xss = require("xss");
         return xss(str);
       });
-      // 返回内存中的用户名
-      env.addFilter("name", (id, users) => {
-        return users.findById[id] ? users.findById[id].name : "";
-      });
-      // 返回内存中的昵称
-      env.addFilter("nick_name", (id, users) => {
-        return users.findById[id] ? users.findById[id].nick_name : "";
-      });
-      // 返回内存中的用户头像
-      env.addFilter("photo_url", (id, users) => {
-        return users.findById[id] ? users.findById[id].photo_url : "";
-      });
-      // 返回详情页链接
-      env.addFilter("seo_url", (base, type) => {
-        return `/${type}/${base}`;
-      });
-      env.addFilter("seo_title", (id, urls) => {
-        return urls.id2url[id];
-      });
-      env.addFilter("original_title", (id, urls) => {
-        return urls.getItemById[id].title;
-      });
-      env.addFilter("original_url", (id, urls) => {
-        return urls.getItemById[id].url;
-      });
-      env.addFilter("original_url_domain", url => {
-        return url.match(/^(https?:\/\/)*([^/]+)/)[2];
-      });
-      // 返回内存中的用户名
-      env.addFilter("user_name", (id, users) => {
-        return users.findById[id].name;
-      });
-
       // 中文年月转英文
       env.addFilter("timezh2eng", str => {
         const month = [

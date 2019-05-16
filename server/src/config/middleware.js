@@ -30,10 +30,6 @@ module.exports = [
     enable: !think.isCli,
     options: {
       debug: isDev,
-      error(err, ctx) {
-        const errmsg = "抱歉, 出错了~";
-        return ctx.fail(err);
-      },
       templates: path.join(think.ROOT_PATH, 'view/error')
     }
   },
