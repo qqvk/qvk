@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "init": "concurrently \"npm install --prefix .\" \"npm run init --prefix server\" \"npm run init --prefix client\"",
+    "init": "concurrently \"npm run init --prefix server\" \"npm run init --prefix client\"",
     "start": "concurrently \"npm start --prefix server\" \"wait-on tcp:8900 && npm start --prefix client\""
   },
   "repository": {
