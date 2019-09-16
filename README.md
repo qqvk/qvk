@@ -19,7 +19,7 @@ git clone git@github.com:qqvk/qvk.git
 
 ### 2. 安装依赖、初始化及启动服务
 
-``
+```
 cd qvk          // 进入项目目录
 npm install     // 安装依赖
 npm run init    // 初始化
