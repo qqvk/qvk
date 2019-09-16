@@ -21,17 +21,15 @@ git clone git@github.com:qqvk/qvk.git [PROJECT]
 
 ### 2. 安装依赖
 
-**打开两个终端窗口**，分别进入server和client目录，分别运行`npm install`安装依赖。
+进入项目根目录，运行`npm install`安装框架依赖。
 
-### 3. 构建模板
+### 3. 项目初始化
 
-进入client目录，运行`npm run build`构建模板和静态文件。
+在项目根目录下，运行`npm run init`为client和server安装依赖，并构建模板和静态文件。
 
 ### 4. 启动服务
 
-启动命令：`npm start`
-
-启动顺序：先启动服务端，再启动前端。就是先在server目录中运行`npm start`，再在client目录中运行`npm start`。
+在项目根目录下，运行：`npm start`
 
 ## 计划
 

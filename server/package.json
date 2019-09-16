@@ -6,7 +6,8 @@
     "start": "node development.js",
     "compile": "babel --no-babelrc src/ --presets think-node --out-dir app/",
     "lint": "eslint src/",
-    "lint-fix": "eslint --fix src/"
+    "lint-fix": "eslint --fix src/",
+    "init": "npm install"
   },
   "dependencies": {
     "debug": "^3.1.0",

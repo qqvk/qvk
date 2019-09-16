@@ -8,7 +8,8 @@
     "server": "node_modules/json-server/bin/index.js --watch ./src/index_list/server/db.json",
     "watch": "webpack --progress  --watch",
     "start": "webpack-dev-server --config './conf/webpack.dev.js' --open",
-    "build": "webpack --config './conf/webpack.prod.js'"
+    "build": "webpack --config './conf/webpack.prod.js'",
+    "init": "npm install && npm run build"
   },
   "keywords": [],
   "author": "lisongfeng",

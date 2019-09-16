@@ -1,0 +1,31 @@
+{
+  "name": "qvk",
+  "version": "1.1.0",
+  "description": "qvk是一个集成现代前端工程化最佳实践的通用Web开发环境，可用于开发传统C/S架构的Web应用、SPA（单页应用）、H5（App内嵌页）等。",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "init": "concurrently \"npm run init --prefix server\" \"npm run init --prefix client\"",
+    "start": "concurrently \"npm start --prefix server\" \"wait-on tcp:8900 && npm start --prefix client\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/qqvk/qvk.git"
+  },
+  "keywords": [
+    "qvk",
+    "thinkjs",
+    "vue.js",
+    "webpack"
+  ],
+  "author": "lisongfeng@360.cn",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/qqvk/qvk/issues"
+  },
+  "homepage": "https://github.com/qqvk/qvk#readme",
+  "devDependencies": {
+    "concurrently": "^4.1.2",
+    "wait-on": "^3.3.0"
+  }
+}
