@@ -1,7 +1,9 @@
 .vscode
 client/node_modules
+client/package-lock.json
 client/assit/cache
 server/node_modules
+server/package-lock.json
 server/view
 server/www
 server/runtime
