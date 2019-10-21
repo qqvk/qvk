@@ -18,7 +18,7 @@
     "think-cache-redis": "^1.1.2",
     "think-gc": "^1.0.2",
     "think-logger3": "^1.0.0",
-    "think-model": "^1.0.0",
+    "think-model": "^1.4.0",
     "think-model-mysql": "^1.0.6",
     "think-mongo": "^1.0.8",
     "think-session": "^1.0.0",
