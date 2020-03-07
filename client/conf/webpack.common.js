@@ -1,3 +1,5 @@
+const fs = require('fs')
+const os = require('os')
 const path = require('path')
 const glob = require('glob')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
@@ -6,38 +8,52 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const HtmlWebpackHarddiskPlugin = require('html-webpack-harddisk-plugin')
 const CommonsChunkPlugin = require('webpack/lib/optimize/CommonsChunkPlugin')
 
-// const OccurrenceOrderPlugin = require('webpack/lib/optimize/OccurrenceOrderPlugin')
-
-// const entry = {
-//   vender: ['lodash','jquery']
-// }
 const entry = {}
 const chunks = []
 const HtmlTemplates = []
 
-// 根据js文件自动生成entry、chunks及HtmlWebpackPlugins
-// package.json-path-based
-// glob.sync('./src/editor_index.js').forEach(path=>{
-glob.sync('./src/*.js').forEach(path=>{
-// glob.sync('./src/article_list_ssr.js').forEach(path=>{
-// glob.sync('./src/*detail_ssr.js').forEach(path=>{
-  const filename = path.split('/src/')[1].split('.js')[0]
-  const ifSSR = filename.indexOf('spa') < 0
-  
-  // 仅对SSR入口提取公共JS和CSS代码
-  if (ifSSR) chunks.push(filename)
-  
-  // fill out entry object
-  entry[filename] = `./src/${filename}.js` //  package.json-path-based
-  
-  // 如果模板不是Vue模板，而是ThinkJS服务端渲染的模板
-  const templatePath = ifSSR ? '_templates_ssr' : filename
+const entries = require('../src/webpack_entries.js')
 
-  // console.log(filename, templatePath)
-  // create multiple instances of HtmlWebpackPlugin
+entries.forEach(({ filename, dependencies }) => {
+  // console.log(filename)
+  const ifSSR = filename.indexOf('spa') < 0
+  // 服务器端渲染
+  if(ifSSR) {
+    // 仅对SSR入口提取公共JS和CSS代码
+    chunks.push(filename)
+
+    // fill out entry object
+    let entryConfig
+    
+    const hasNoDependence = Object.keys(dependencies).length === 0
+    // 没有依赖
+    if(hasNoDependence) {
+      // Webpack entry不支持空字符串，只支持文件，因此临时创建空文件
+      const tempFile = `${os.tmpdir()}/${filename}.js`
+      fs.writeFileSync(tempFile, '')
+      entryConfig = tempFile
+    } else {
+      entryConfig = Object.keys(dependencies).reduce((pre, type) => {
+        const files = dependencies[type].map(file => `STATIC/${type}/${file}`)
+        pre = pre.concat(files)
+        return pre
+      },[])
+    }
+    entry[filename] = entryConfig
+  } else {
+    // SPA
+    entry[filename] = `./src/${filename}/${filename}.js` //  package.json-path-based
+  }
+  
+
+  const templatePath = ifSSR ? 'templates' : filename
+  let templateFile = `./src/${templatePath}/${filename}.njk`
+  // 没有模板则使用默认模板
+  if(!fs.existsSync(templateFile)) templateFile = `./src/templates/default.njk`
+
   HtmlTemplates.push(new HtmlWebpackPlugin({
     title: filename,
-    template: `html-loader!./src/${templatePath}/${filename}.njk`, // current-config-file-path(conf)-based
+    template: `html-loader!${templateFile}`, // current-config-file-path(conf)-based
     filename: `../../view/${filename}.html`,  // current-config-file-path(conf)-based
     // chunks: ['vender','base',filename],
     // 仅对SSR页面注入公共JS和CSS代码
@@ -49,15 +65,12 @@ glob.sync('./src/*.js').forEach(path=>{
     alwaysWriteToDisk: true
   }))
 })
+console.log(entry)
 
 const HtmlTemplatesIncs = []
 // 仅生成模板包含文件
-// glob.sync('./src/_templates_ssr/base/article_channels.html').forEach(path=>{
-glob.sync('./src/_templates_ssr/**/*.html').forEach(path=>{
-  // path = path.slice(path.indexOf('_ssr/')+5)
-  // const subdir = path.split('/')[0]
-  // const filename = path.split('/')[1].split('.html')[0]
-  path = path.slice(path.indexOf('_ssr/')+5)
+glob.sync('./src/templates/**/*.html').forEach(path=>{
+  path = path.slice(path.indexOf('templates/')+10)
   const unresolvedPath = path.split('/')
   let subdir
   let filename
@@ -71,7 +84,7 @@ glob.sync('./src/_templates_ssr/**/*.html').forEach(path=>{
   }  
   
   HtmlTemplatesIncs.push(new HtmlWebpackPlugin({
-    template: `html-loader!./src/_templates_ssr/${subdir}/${filename}.html`, // current-config-file-path(conf)-based
+    template: `html-loader!./src/templates/${subdir}/${filename}.html`, // current-config-file-path(conf)-based
     filename: `../../view/${subdir}/${filename}.html`,  // current-config-file-path(conf)-based
     inject: false,
     chunks: [],
@@ -122,6 +135,13 @@ module.exports = {
           // }
         }
       },
+      // {
+      //   test: /\.(png|gif|jpe?g|svg)$/,
+      //   loader: 'url-loader',
+      //   options: {
+          
+      //   }
+      // },
       {
         test: /\.(otf|eot|ttf|woff|woff2)(\?\S*)?$/,
         loader: 'file-loader',
@@ -136,7 +156,9 @@ module.exports = {
             'css-loader', // translate css into CommonJS modules
             {
               loader: 'postcss-loader',
-              options: {}
+              options: {
+                // postcss plugins config have moved to .postcssrc.js
+              }
             }, // Run post css actions
             {
               loader: 'sass-loader',
@@ -195,9 +217,10 @@ module.exports = {
   ],
   resolve: {
     extensions: ['.js','.json','.vue','.css','.scss','.njk'],
-    // alias: {
-    //   vue: 'vue/dist/vue.js'
-    // }
+    alias: {
+      STATIC: path.resolve(__dirname, '../src/_static'),
+      ASSETS: path.resolve(__dirname, '../src/_assets')
+    }
   },
   externals: {
     jquery: 'jQuery',

@@ -15,7 +15,7 @@ module.exports = merge(common, {
         'view/*'
       ],
       {
-        root: path.resolve(__dirname,'../../'),
+        root: path.resolve(__dirname,'../../server'),
         // exclude: ['base', 'error'],
         verbose: true,
         dry: false

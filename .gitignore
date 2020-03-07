@@ -3,8 +3,10 @@ node_modules
 client/node_modules
 client/package-lock.json
 client/assit/cache
+client/etc
 server/node_modules
 server/package-lock.json
 server/view
 server/www
 server/runtime
+server/etc
