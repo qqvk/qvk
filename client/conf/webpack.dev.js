@@ -1,7 +1,7 @@
-const path = require('path');
+const PreExternalScriptsWebpackPlugin = require('../assit/pre-external-assets-webpack-plugin')
+const externals = require('./external.assets').development
 const merge = require('webpack-merge');
 const common = require('./webpack.common.js');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 
 module.exports = merge(common, {
@@ -12,5 +12,8 @@ module.exports = merge(common, {
     watchContentBase: true,
     port: 9090,
     host: 'localhost'
-  }
+  },
+  plugins: [
+    new PreExternalScriptsWebpackPlugin(externals)
+  ]
 });

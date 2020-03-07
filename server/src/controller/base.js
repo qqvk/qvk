@@ -1,5 +1,4 @@
-const headlessControllers = ["api", "apple-touch-icon.png"];
-const spaControllers = ["scene"];
+const spaControllers = ["demo"];
 
 module.exports = class extends think.Controller {
   isDev() {
@@ -21,7 +20,7 @@ module.exports = class extends think.Controller {
   async __call() {
     const controller = this.ctx.url.split("/")[1];
     if (spaControllers.indexOf(controller) > -1) {
-      return this.display(`${controller}_spa`);
+      return this.display(`spa_${controller}`);
     }
   }
 };

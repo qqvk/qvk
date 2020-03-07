@@ -1,3 +1,36 @@
+<template>
+<main>
+  <section class="card">
+    <header>对音箱说</header>
+    <div class="topic">
+      <div class="content">小贝，我回来了</div>
+      <span class="remove removetopic"></span>
+    </div>
+    <div class="topic">
+      <div class="content">帮我定一个明天早上6点的闹钟</div>
+      <span class="remove removetopic"></span>
+    </div>
+    <div class="button addtopic">
+      <img src="//p0.ssl.qhimg.com/d/speaker/20190115/ic_circleadd_blue_2x.png">
+      <span>添加说法</span>
+    </div>
+  </section>
+  <section class="card">
+    <header>音箱回应</header>
+        <div class="reply">
+          <span class="icon"><img src="//p0.ssl.qhimg.com/d/speaker/20190116/reply_talk_m_3x.png"></span>
+          <div class="content">欢迎主人回家</div>
+          <span class="remove removereply"></span>
+        </div>
+    <div class="button addreply">
+      <img src="//p1.ssl.qhimg.com/d/speaker/20190115/ic_circleadd_blue_2x.png">
+      <span>添加回应</span>
+    </div>
+  </section>
+
+</main>
+</template>
+<style lang="scss">
 
 body {
   padding: 30px;
@@ -114,3 +147,5 @@ small.playHint {
   text-align: center;
   border-radius: 1.5rem;
 }
+
+</style>
