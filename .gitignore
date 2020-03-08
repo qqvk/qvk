@@ -10,3 +10,4 @@ server/view
 server/www
 server/runtime
 server/etc
+server/src/config/spaControllers.js

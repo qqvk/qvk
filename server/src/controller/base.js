@@ -1,4 +1,5 @@
-const spaControllers = ["demo"];
+// const spaControllers = ["demo"];
+const spaControllers = require('../config/spaControllers')
 
 module.exports = class extends think.Controller {
   isDev() {
