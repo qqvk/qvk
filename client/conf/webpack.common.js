@@ -12,65 +12,75 @@ const entry = {}
 const chunks = []
 const HtmlTemplates = []
 
-const entries = require('../src/webpack_entries.js')
+const { SPA, SSR } = require('../src/webpack_entries.js')
 
-entries.forEach(({ filename, dependencies }) => {
-  // console.log(filename)
-  const ifSSR = filename.indexOf('spa') < 0
-  // 服务器端渲染
-  if(ifSSR) {
-    // 仅对SSR入口提取公共JS和CSS代码
-    chunks.push(filename)
+// 处理SPA
+SPA.forEach(({ entry: entryName = '' }) => {
+  let entryFile = `./src/${entryName}/${entryName}.js`
+  if (!fs.existsSync(entryFile)) entryFile = `./src/${entryName}/index.js`
+  if (!fs.existsSync(entryFile)) entryFile = `./src/${entryName}/main.js`
+  if (!fs.existsSync(entryFile)) entryFile = `./src/${entryName}/app.js`
+  if (!fs.existsSync(entryFile)) entryFile = `./src/${entryName}/entry.js`
+  if (!fs.existsSync(entryFile)) 
+    throw new Error(`No entry file found in './src/${entryName}', that's could be either '${entryName}.js', 'index.js', 'main.js', 'app.js' or just 'entry.js'. `)
 
-    // fill out entry object
-    let entryConfig
-    
-    const hasNoDependence = Object.keys(dependencies).length === 0
-    // 没有依赖
-    if(hasNoDependence) {
-      // Webpack entry不支持空字符串，只支持文件，因此临时创建空文件
-      const tempFile = `${os.tmpdir()}/${filename}.js`
-      fs.writeFileSync(tempFile, '')
-      entryConfig = tempFile
-    } else {
-      entryConfig = Object.keys(dependencies).reduce((pre, type) => {
-        const files = dependencies[type].map(file => `STATIC/${type}/${file}`)
-        pre = pre.concat(files)
-        return pre
-      },[])
-    }
-    entry[filename] = entryConfig
-  } else {
-    // SPA
-    entry[filename] = `./src/${filename}/${filename}.js` //  package.json-path-based
-  }
-  
-
-  const templatePath = ifSSR ? 'templates' : filename
-  let templateFile = `./src/${templatePath}/${filename}.njk`
+  entry[entryName] = entryFile
+  const templatePath = entryName
+  let templateFile = `./src/${templatePath}/${entryName}.njk`
   // 没有模板则使用默认模板
-  if(!fs.existsSync(templateFile)) templateFile = `./src/templates/default.njk`
+  if (!fs.existsSync(templateFile)) templateFile = `./src/templates/default.njk`
 
   HtmlTemplates.push(new HtmlWebpackPlugin({
-    title: filename,
-    template: `html-loader!${templateFile}`, // current-config-file-path(conf)-based
-    filename: `../../view/${filename}.html`,  // current-config-file-path(conf)-based
-    // chunks: ['vender','base',filename],
-    // 仅对SSR页面注入公共JS和CSS代码
-    chunks: ifSSR ? ['commons', filename] : [filename],
-    // chunks: [filename],
-    // hash: true,
-    // favicon: './src/_assets/favicon.png',  // package.json-path-based 
+    title: entryName,
+    template: `html-loader!${templateFile}`,
+    filename: `../../view/spa_${entryName}.html`,
+    chunks: [entryName],
     chunksSortMode: 'dependency',
     alwaysWriteToDisk: true
   }))
 })
+// 处理SSR
+SSR.forEach(({ entry: entryName = '', dependencies = {} }) => {
+  // 仅对SSR入口提取公共JS和CSS代码
+  chunks.push(entryName)
+  let entryConfig
+  const hasNoDependence = Object.keys(dependencies).length === 0
+  // 没有依赖
+  if (hasNoDependence) {
+    // Webpack entry不支持空字符串，只支持文件，因此临时创建空文件
+    const tempFile = `${os.tmpdir()}/${entryName}.js`
+    fs.writeFileSync(tempFile, '')
+    entryConfig = tempFile
+  } else {
+    entryConfig = Object.keys(dependencies).reduce((pre, type) => {
+      const files = dependencies[type].map(file => `STATIC/${type}/${file}`)
+      pre = pre.concat(files)
+      return pre
+    }, [])
+  }
+  entry[entryName] = entryConfig
+
+  const templatePath = 'templates'
+  let templateFile = `./src/${templatePath}/${entryName}.njk`
+  // 没有模板则使用默认模板
+  if (!fs.existsSync(templateFile)) templateFile = `./src/templates/default.njk`
+
+  HtmlTemplates.push(new HtmlWebpackPlugin({
+    title: entryName,
+    template: `html-loader!${templateFile}`, 
+    filename: `../../view/${entryName}.html`, 
+    chunks: ['commons', entryName],
+    chunksSortMode: 'dependency',
+    alwaysWriteToDisk: true
+  }))
+})
+
 console.log(entry)
 
 const HtmlTemplatesIncs = []
 // 仅生成模板包含文件
-glob.sync('./src/templates/**/*.html').forEach(path=>{
-  path = path.slice(path.indexOf('templates/')+10)
+glob.sync('./src/templates/**/*.html').forEach(path => {
+  path = path.slice(path.indexOf('templates/') + 10)
   const unresolvedPath = path.split('/')
   let subdir
   let filename
@@ -81,8 +91,8 @@ glob.sync('./src/templates/**/*.html').forEach(path=>{
   } else {
     subdir = unresolvedPath[0]
     filename = unresolvedPath[1].split('.')[0]
-  }  
-  
+  }
+
   HtmlTemplatesIncs.push(new HtmlWebpackPlugin({
     template: `html-loader!./src/templates/${subdir}/${filename}.html`, // current-config-file-path(conf)-based
     filename: `../../view/${subdir}/${filename}.html`,  // current-config-file-path(conf)-based
@@ -112,7 +122,7 @@ module.exports = {
           }
         }
       },
-      { 
+      {
         test: /\.js$/,
         loader: 'babel-loader',
         exclude: /node_modules/,
@@ -130,7 +140,7 @@ module.exports = {
           //   //   return 'img/[path][name].[ext]'
           //   // }
           //   console.log('**********', file, path)
-      
+
           //   return 'img/[hash].[ext]'
           // }
         }
@@ -139,7 +149,7 @@ module.exports = {
       //   test: /\.(png|gif|jpe?g|svg)$/,
       //   loader: 'url-loader',
       //   options: {
-          
+
       //   }
       // },
       {
@@ -180,7 +190,7 @@ module.exports = {
           use: ['css-loader', 'stylus-loader'],
           fallback: 'style-loader' // fallback: write css to html, in case ExtractTextPlugin fails
         })
-      } 
+      }
     ]
   },
   output: {
@@ -216,7 +226,7 @@ module.exports = {
     ...HtmlTemplatesIncs, // 生成模板包含文件
   ],
   resolve: {
-    extensions: ['.js','.json','.vue','.css','.scss','.njk'],
+    extensions: ['.js', '.json', '.vue', '.css', '.scss', '.njk'],
     alias: {
       STATIC: path.resolve(__dirname, '../src/_static'),
       ASSETS: path.resolve(__dirname, '../src/_assets')

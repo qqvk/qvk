@@ -1,5 +1,5 @@
-// const spaControllers = ["demo"];
-const spaControllers = require('../config/spaControllers')
+const { SPA } = require('../../../client/src/webpack_entries.js')
+const spaControllers = SPA.map(item => item.entry)
 
 module.exports = class extends think.Controller {
   isDev() {

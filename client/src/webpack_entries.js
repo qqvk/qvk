@@ -1,18 +1,18 @@
 SPA = [
     {
-        "filename": "spa_demo",
-        "dependencies": {}
+        entry: 'spademo'
     }
 ]
 
 SSR = [
     {
-        "filename": "index_demo",
-        "dependencies": {
-            "js": ["index_index"],
-            "css": ["index_index"]
+        entry: 'ssrdemo',
+        dependencies: {
+            js: ['index_index'],
+            css: ['index_index']
         }
     }
 ]
 
-module.exports = SPA.concat(SSR)
+exports.SPA = SPA
+exports.SSR = SSR
