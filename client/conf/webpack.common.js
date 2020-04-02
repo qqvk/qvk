@@ -1,3 +1,6 @@
+const mode = process.env.NODE_ENV || 'development';
+const prod = mode === 'production';
+
 const fs = require('fs')
 const os = require('os')
 const path = require('path')
@@ -7,6 +10,8 @@ const ProvidePlugin = require('webpack/lib/ProvidePlugin')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const HtmlWebpackHarddiskPlugin = require('html-webpack-harddisk-plugin')
 const CommonsChunkPlugin = require('webpack/lib/optimize/CommonsChunkPlugin')
+const PreExternalScriptsWebpackPlugin = require('../assit/pre-external-assets-webpack-plugin')
+const externals = require('./external.assets')[mode]
 
 const entry = {}
 const chunks = []
@@ -15,7 +20,7 @@ const HtmlTemplates = []
 const { SPA, SSR } = require('../src/webpack_entries.js')
 
 // 处理SPA
-SPA.forEach(({ entry: entryName = '' }) => {
+SPA.forEach(({ entry: entryName = '', lib }) => {
   let entryFile = `./src/${entryName}/${entryName}.js`
   if (!fs.existsSync(entryFile)) entryFile = `./src/${entryName}/index.js`
   if (!fs.existsSync(entryFile)) entryFile = `./src/${entryName}/main.js`
@@ -33,7 +38,7 @@ SPA.forEach(({ entry: entryName = '' }) => {
   HtmlTemplates.push(new HtmlWebpackPlugin({
     title: entryName,
     template: `html-loader!${templateFile}`,
-    filename: `../../view/spa_${entryName}.html`,
+    filename: `../../view/spa_${lib}_${entryName}.html`,
     chunks: [entryName],
     chunksSortMode: 'dependency',
     alwaysWriteToDisk: true
@@ -110,6 +115,16 @@ module.exports = {
   module: {
     rules: [
       {
+        test: /\.svelte$/,
+        exclude: /node_modules/,
+        use: {
+          loader: 'svelte-loader',
+          options: {
+            emitCss: true,
+          }
+        }
+      },
+      {
         test: /\.vue$/,
         loader: 'vue-loader',
         options: {
@@ -123,7 +138,7 @@ module.exports = {
         }
       },
       {
-        test: /\.js$/,
+        test: /\.(js|jsx)$/,
         loader: 'babel-loader',
         exclude: /node_modules/,
         options: {
@@ -224,18 +239,23 @@ module.exports = {
     // }), // 提取vender对应的第三方库
     ...HtmlTemplates, // 把CSS和JS写入模板文件
     ...HtmlTemplatesIncs, // 生成模板包含文件
+    new PreExternalScriptsWebpackPlugin(externals)
   ],
   resolve: {
-    extensions: ['.js', '.json', '.vue', '.css', '.scss', '.njk'],
+    extensions: ['.js', 'jsx', '.json', '.vue', '.svelte', '.css', '.scss', '.njk'],
+    mainFields: ['svelte', 'browser', 'module', 'main'],
     alias: {
       STATIC: path.resolve(__dirname, '../src/_static'),
-      ASSETS: path.resolve(__dirname, '../src/_assets')
+      ASSETS: path.resolve(__dirname, '../src/_assets'),
+      svelte: path.resolve('node_modules', 'svelte')
     }
   },
   externals: {
     jquery: 'jQuery',
     vue: 'Vue',
     vuex: 'Vuex',
+    React: 'React',
+    ReactDOM : 'ReactDOM',
     vuetify: 'Vuetify',
     uikit: 'UIkit'
   }

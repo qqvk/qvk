@@ -1,5 +1,5 @@
 const { SPA } = require('../../../client/src/webpack_entries.js')
-const spaControllers = SPA.map(item => item.entry)
+const spaControllers = SPA.map(item => `${item.lib}_${item.entry}`)
 
 module.exports = class extends think.Controller {
   isDev() {
@@ -20,8 +20,14 @@ module.exports = class extends think.Controller {
   // 当解析后的URL对应的控制器存在，但Action不存在时调用
   async __call() {
     const controller = this.ctx.url.split("/")[1];
-    if (spaControllers.indexOf(controller) > -1) {
-      return this.display(`spa_${controller}`);
+    
+    const validController = spaControllers.find(item => {
+      // item === svelte_appname/vue_appname
+      return item.split('_')[1] === controller
+    })
+    // console.log(validController)
+    if (validController) {
+      return this.display(`spa_${validController}`);
     }
   }
 };

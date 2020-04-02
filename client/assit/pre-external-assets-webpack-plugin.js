@@ -1,7 +1,8 @@
 module.exports = class InjectExternalsPlugin {
 
-  constructor(externals) {
+  constructor(externals, spalib) {
     this.externals = externals
+    this.spalib = spalib
   }
 
   apply(compiler) {
@@ -10,6 +11,9 @@ module.exports = class InjectExternalsPlugin {
     compiler.plugin('compilation', compilation => {
       // 修改注入模板的script和link标签,
       compilation.plugin('html-webpack-plugin-alter-asset-tags', async (data, cb) => {
+
+        // console.log(2222, data.plugin)
+
         const templateName = data.plugin.childCompilationOutputName
         // 排除特殊模板（如：editor_simplemde_ssr）
         const exception = this.externals.exception
@@ -27,9 +31,20 @@ module.exports = class InjectExternalsPlugin {
         const proprietary = this.externals.proprietary
         const specifics = []
         proprietary.forEach(item => {
-          // 测试当前模板是SPA还是SSR
-          if (item.match.test(templateName))
-            specifics.push(...item.assets)
+          // 排除非SSR和SPA模板，命名要约束
+          if (item.match.test(templateName)){
+            let assets = []
+            const libsObj = item.libs
+
+            // console.log(444, libsObj, item, templateName)
+            if(libsObj) {
+              const libsArray = Object.keys(libsObj)
+              assets = libsObj[libsArray.find(lib => templateName.indexOf(lib) > 0)].assets
+            } else {
+              assets = item.assets
+            }
+            specifics.push(...assets)
+          }
         })
         let assets = [...share, ...specifics]
 

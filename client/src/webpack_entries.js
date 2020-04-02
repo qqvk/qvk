@@ -1,6 +1,15 @@
 SPA = [
     {
-        entry: 'spademo'
+        entry: 'vuedemo',
+        lib: 'vue'
+    },
+    {
+        entry: 'sveltedemo',
+        lib: 'svelte'
+    },
+    {
+        entry: 'reactdemo',
+        lib: 'react'
     }
 ]
 
