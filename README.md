@@ -4,9 +4,9 @@ qvk是一个集成现代前端工程化最佳实践的通用Web开发环境，�
 
 qvk初始版集成以下Web框架和打包工具。
 
-- [Vue.js](https://vuejs.org/)：渐进式JavaScript框架，前端组件式开发主流选择。
-- [React.js](https://reactjs.org/)：渐进式JavaScript框架，前端组件式开发主流选择。
-- [Svelte](https://svelte.dev/)：渐进式JavaScript框架，前端组件式开发主流选择。
+- [Vue.js](https://vuejs.org/)：The ProgressiveJavaScript Framework。
+- [React.js](https://reactjs.org/)：A JavaScript library for building user interfaces。
+- [Svelte](https://svelte.dev/)：Cybernetically enhanced web apps。
 - [ThinkJS](https://thinkjs.org/)：基于MVC模式的简单易用、功能强大的Node.js开发框架。
 - [Webpack](https://webpack.js.org/)：目前使用最广泛的前端资源模块打包工具。
 
