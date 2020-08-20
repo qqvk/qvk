@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "server": "node_modules/json-server/bin/index.js --watch ./src/index_list/server/db.json",
     "watch": "webpack --progress  --watch",
-    "start": "webpack-dev-server --config './conf/webpack.dev.js' --open",
+    "start": "webpack-dev-server --config './conf/webpack.dev.js' --open 'Google Chrome -incognito'",
     "build": "cross-env NODE_ENV=production webpack --config './conf/webpack.prod.js'",
     "init": "npm install && npm run build"
   },
